@@ -11,13 +11,27 @@
 <body>
 
   <div id="app" class="container">
-    <h1>My Todos</h1>
-    <ul>
-      <li v-for="todo in todos">{{ todo }}</li>
-      <!-- ディレクトリと呼ばれる -->
+    <h1>
+      <button @click="purge">Purge</button>
+      My Todos
+      <span class="info">({{ remaining.length }}/{{ todos.length }})</span>
+    </h1>
+    <ul v-if="todos.length">
+      <li v-for="(todo, index) in todos">
+        <!-- v-forの優先順位> v-if -->
+        <input type="checkbox" v-model="todo.isDone">
+        <span v-bind:class="{done: todo.isDone}">
+          {{ todo.title }}
+        </span>
+        <span @click="deleteItem(index)" class="command">[x]</span>
+      </li>
     </ul>
-    <form>
-      <input type="text">
+    <ul v-else>
+      {{ todos.length }}
+      <li>Nothing to do, yay!</li>
+    </ul>
+    <form @submit.prevent="addItem">
+      <input type="text" v-model="newItem">
       <input type="submit" value="Add">
     </form>
   </div>
